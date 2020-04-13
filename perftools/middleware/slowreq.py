@@ -8,7 +8,6 @@ perftools.middleware.slowreq
 
 import inspect
 import logging
-import thread
 import threading
 
 from django.conf import settings
@@ -40,7 +39,7 @@ class SlowRequestLoggingMiddleware(Base):
 
         request = WSGIRequest(environ)
 
-        timer = threading.Timer(self.threshold, self.log_request, args=[thread.get_ident(), request])
+        timer = threading.Timer(self.threshold, self.log_request, args=[threading.get_ident(), request])
         timer.start()
 
         try:
