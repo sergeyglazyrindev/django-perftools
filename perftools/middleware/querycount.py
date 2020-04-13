@@ -53,6 +53,12 @@ class CursorWrapper(object):
     def __iter__(self):
         return iter(self.cursor)
 
+    def __enter__(self, *args, **kwargs):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        pass
+
 
 def get_cursor_wrapper(state, queries=False):
     def cursor(func, self, *args, **kwargs):
@@ -78,7 +84,7 @@ class QueryCountLoggingMiddleware(Base):
         state = State()
         cursor = get_cursor_wrapper(state, queries=self.queries)
 
-        with Patcher('django.db.backends.BaseDatabaseWrapper.cursor', cursor):
+        with Patcher('django.db.backends.base.base.BaseDatabaseWrapper.cursor', cursor):
             try:
                 return list(self.application(environ, start_response))
             finally:
